@@ -87,7 +87,7 @@ The frontend UI parses this JSON and displays it in clean, user-friendly section
 }
 ```
 
-- The backend executes the weather API and returns real weather info, which the AI then uses to complete the trip plan.
+- The backend executes the weather API and returns real weather info, which the AI then uses to complete the trip plan..
 
 ---
 
