@@ -49,6 +49,7 @@ Rules:
 
     const prompt = `${systemPrompt}\n\nUser request: ${userPrompt}`;
 
+    const result = await model.generateContent(prompt);
   } catch (error) {
     console.error("❌ Gemini API Error:", error);
     res.status(500).json({ error: "Failed to fetch plan." });
