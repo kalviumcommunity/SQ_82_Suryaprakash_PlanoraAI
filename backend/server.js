@@ -21,7 +21,7 @@ app.post("/api/plan-trip", async (req, res) => {
       generationConfig: {
         temperature: 0.7,   // controls creativity
         topP: 0.9,          // nucleus sampling
-        
+        topK: 40,           
       },
     });
 
