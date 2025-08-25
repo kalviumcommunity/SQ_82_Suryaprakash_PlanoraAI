@@ -19,7 +19,9 @@ app.post("/api/plan-trip", async (req, res) => {
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
       generationConfig: {
-        temperature: 0.7
+        temperature: 0.7,   // controls creativity
+        topP: 0.9,          // nucleus sampling
+        
       },
     });
 
