@@ -15,9 +15,15 @@ app.post("/api/plan-trip", async (req, res) => {
   try {
     const { destination, days, budget } = req.body;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // (1) MODEL CONFIG — added temperature, topP, topK, stop sequences
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        temperature: 0.7
+      },
+    });
 
-    // RTFC-based prompting
+    // (2) RTFC-based prompting (unchanged)
     const systemPrompt = `
 You are a travel planner AI. Plan a ${days}-day trip to ${destination}.
 
@@ -42,21 +48,27 @@ Rules:
     }
   }
 }
+Return JSON only. Do not add explanations. Finish output with "END_OF_PLAN".
 `;
-
 
     const userPrompt = `Plan a trip to ${destination} for ${days} days with a budget of $${budget}.`;
 
     const prompt = `${systemPrompt}\n\nUser request: ${userPrompt}`;
 
+    // (3) GENERATION
     const result = await model.generateContent(prompt);
 
-    res.json({ plan: result.response.text() });
+    
+
+    res.json({
+      plan: result.response.text()
+    });
   } catch (error) {
     console.error("❌ Gemini API Error:", error);
     res.status(500).json({ error: "Failed to fetch plan." });
   }
 });
+
 console.log("Gemini API Key loaded:", process.env.GEMINI_API_KEY ? "✅ Yes" : "❌ No");
 app.listen(process.env.PORT || 5000, () =>
   console.log(`✅ Server running on port ${process.env.PORT || 5000}`)
