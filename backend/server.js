@@ -21,7 +21,8 @@ app.post("/api/plan-trip", async (req, res) => {
       generationConfig: {
         temperature: 0.7,   // controls creativity
         topP: 0.9,          // nucleus sampling
-        topK: 40,           
+        topK: 40,           // restricts token sampling to top K candidates
+        stopSequences: ["END_OF_PLAN"], // custom stop sequence
       },
     });
 
