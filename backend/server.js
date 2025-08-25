@@ -58,13 +58,16 @@ Return JSON only. Do not add explanations. Finish output with "END_OF_PLAN".
 
     const prompt = `${systemPrompt}\n\nUser request: ${userPrompt}`;
 
-    // (3) GENERATION
+    // (3) GENERATION + TOKEN LOGGING
     const result = await model.generateContent(prompt);
 
-    
+    // count tokens used
+    const usage = result.response.usageMetadata;
+    console.log("🔹 Token Usage:", usage);
 
     res.json({
-      plan: result.response.text()
+      plan: result.response.text(),
+      tokens: usage, // send token usage back to frontend for visibility
     });
   } catch (error) {
     console.error("❌ Gemini API Error:", error);
