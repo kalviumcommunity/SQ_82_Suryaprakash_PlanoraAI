@@ -7,20 +7,30 @@ function TravelPlanner() {
   const [budget, setBudget] = useState(500);
   const [plan, setPlan] = useState("");
   const [loading, setLoading] = useState(false);
+  const [weather, setWeather] = useState(null);
 
   const handlePlanTrip = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/api/plan-trip", {
+      // 1. Fetch travel plan
+      const planResponse = await axios.post("http://localhost:5000/api/plan-trip", {
         destination,
         days,
         budget,
       });
 
-      setPlan(response.data.plan);
+      setPlan(planResponse.data.plan);
+
+      // 2. Fetch weather data ☁️
+      const weatherResponse = await axios.get(
+        `http://localhost:5000/api/weather?city=${destination}`
+      );
+
+      setWeather(weatherResponse.data);
     } catch (error) {
       console.error(error);
       setPlan("❌ Failed to fetch travel plan.");
+      setWeather(null);
     }
     setLoading(false);
   };
@@ -65,6 +75,16 @@ function TravelPlanner() {
         <div className="mt-4 p-4 border rounded bg-gray-50 w-full whitespace-pre-wrap">
           <h2 className="font-semibold mb-2">Your Travel Plan:</h2>
           <p>{plan}</p>
+        </div>
+      )}
+
+      {weather && (
+        <div className="mt-4 p-4 border rounded bg-blue-50 w-full">
+          <h2 className="font-semibold mb-2">🌤 Weather in {weather.name}:</h2>
+          <p>
+            {weather.weather[0].description} | 🌡 {weather.main.temp}°C | 💧{" "}
+            {weather.main.humidity}% humidity | 🌬 {weather.wind.speed} m/s
+          </p>
         </div>
       )}
     </div>
